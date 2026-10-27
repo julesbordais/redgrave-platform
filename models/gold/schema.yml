@@ -1,0 +1,20 @@
+version: 2
+# Step 6 done: key column of each gold model is unique and not null.
+models:
+  - name: gold_revenue_by_channel
+    description: "Paid revenue per sales channel (refunded orders excluded)."
+    columns:
+      - name: channel
+        data_tests: [unique, not_null]
+      - name: revenue_gbp
+        data_tests: [not_null]
+  - name: gold_daily_sales
+    description: "One row per day for the chairwoman's dashboard."
+    columns:
+      - name: order_date
+        data_tests: [unique, not_null]
+  - name: gold_top_products
+    description: "Best-selling products by paid revenue."
+    columns:
+      - name: sku
+        data_tests: [unique, not_null]

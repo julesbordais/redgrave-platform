@@ -1,0 +1,8 @@
+target/
+dbt_packages/
+logs/
+.venv/
+*.p8
+*.pem
+.user.yml
+run_all.sh

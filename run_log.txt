@@ -1,0 +1,414 @@
+
+================ 1. Install dbt 1.11.16 ================
+
+[notice] A new release of pip is available: 25.1.1 -> 26.2.2
+[notice] To update, run: pip install --upgrade pip
+Core:
+  - installed: 1.11.16
+  - latest:    1.12.6  - Update available!
+
+  Your version of dbt-core is out of date!
+  You can find instructions for upgrading here:
+  https://docs.getdbt.com/docs/installation
+
+Plugins:
+  - snowflake: 1.11.6 - Update available!
+
+  At least one plugin is out of date with dbt-core.
+  You can find instructions for upgrading here:
+  https://docs.getdbt.com/docs/installation
+
+
+
+================ 2. Connection ================
+[0m09:17:22  Running with dbt=1.11.16
+[0m09:17:22  dbt version: 1.11.16
+[0m09:17:22  python version: 3.13.5
+[0m09:17:22  python path: /Users/jules/redgrave_lab/redgrave_dbt/.venv/bin/python3
+[0m09:17:22  os info: macOS-27.0.1-arm64-arm-64bit-Mach-O
+[0m09:17:22  Using profiles dir at .
+[0m09:17:22  Using profiles.yml file at ./profiles.yml
+[0m09:17:22  Using dbt_project.yml file at /Users/jules/redgrave_lab/redgrave_dbt/dbt_project.yml
+[0m09:17:22  adapter type: snowflake
+[0m09:17:22  adapter version: 1.11.6
+[0m09:17:22  Configuration:
+[0m09:17:22    profiles.yml file [[32mOK found and valid[0m]
+[0m09:17:22    dbt_project.yml file [[32mOK found and valid[0m]
+[0m09:17:22  Required dependencies:
+[0m09:17:22   - git [[32mOK found[0m]
+
+[0m09:17:22  Connection:
+[0m09:17:22    account: DQYYEIS-EW25504
+[0m09:17:22    user: REDGRAVE_LOADER
+[0m09:17:22    database: REDGRAVE
+[0m09:17:22    warehouse: REDGRAVE_WH
+[0m09:17:22    role: SYSADMIN
+[0m09:17:22    schema: SILVER
+[0m09:17:22    authenticator: None
+[0m09:17:22    oauth_client_id: None
+[0m09:17:22    query_tag: None
+[0m09:17:22    client_session_keep_alive: False
+[0m09:17:22    host: None
+[0m09:17:22    port: None
+[0m09:17:22    proxy_host: None
+[0m09:17:22    proxy_port: None
+[0m09:17:22    protocol: None
+[0m09:17:22    connect_retries: 1
+[0m09:17:22    connect_timeout: None
+[0m09:17:22    retry_on_database_errors: False
+[0m09:17:22    retry_all: False
+[0m09:17:22    insecure_mode: False
+[0m09:17:22    reuse_connections: True
+[0m09:17:22    s3_stage_vpce_dns_name: None
+[0m09:17:22    platform_detection_timeout_seconds: 0.0
+[0m09:17:22  Registered adapter: snowflake=1.11.6
+[0m09:17:23    Connection test: [[32mOK connection ok[0m]
+
+[0m09:17:23  [32mAll checks passed![0m
+
+================ 0. Bronze check (ingestion lab) ================
+T | N | LAST_LOAD
+orders | 240 | 2026-10-22 10:13:44.375000-07:00
+order_items | 480 | 2026-10-22 10:13:45.625000-07:00
+products | 12 | None
+
+================ 3-5. Silver + gold ================
+[0m09:17:29  Running with dbt=1.11.16
+[0m09:17:30  Registered adapter: snowflake=1.11.6
+[0m09:17:30  Unable to do partial parsing because saved manifest not found. Starting full parse.
+[0m09:17:30  Found 6 models, 18 data tests, 1 operation, 3 sources, 540 macros
+[0m09:17:30  
+[0m09:17:30  Concurrency: 4 threads (target='dev')
+[0m09:17:30  
+[0m09:17:32  2 of 6 START sql view model SILVER.silver_products ............................. [RUN]
+[0m09:17:32  1 of 6 START sql view model SILVER.silver_orders ............................... [RUN]
+[0m09:17:32  1 of 6 OK created sql view model SILVER.silver_orders .......................... [[32mSUCCESS 1[0m in 0.51s]
+[0m09:17:32  2 of 6 OK created sql view model SILVER.silver_products ........................ [[32mSUCCESS 1[0m in 0.62s]
+[0m09:17:32  3 of 6 START sql view model SILVER.silver_order_lines .......................... [RUN]
+[0m09:17:34  3 of 6 OK created sql view model SILVER.silver_order_lines ..................... [[32mSUCCESS 1[0m in 1.42s]
+[0m09:17:34  6 of 6 START sql table model GOLD.gold_top_products ............................ [RUN]
+[0m09:17:34  5 of 6 START sql table model GOLD.gold_revenue_by_channel ...................... [RUN]
+[0m09:17:34  4 of 6 START sql table model GOLD.gold_daily_sales ............................. [RUN]
+[0m09:17:36  5 of 6 OK created sql table model GOLD.gold_revenue_by_channel ................. [[32mSUCCESS 3[0m in 1.73s]
+[0m09:17:36  6 of 6 OK created sql table model GOLD.gold_top_products ....................... [[32mSUCCESS 12[0m in 1.74s]
+[0m09:17:36  4 of 6 OK created sql table model GOLD.gold_daily_sales ........................ [[32mSUCCESS 30[0m in 1.77s]
+[0m09:17:36  
+[0m09:17:37  1 of 1 START hook: redgrave_dbt.on-run-end.0 ................................... [RUN]
+[0m09:17:37  1 of 1 OK hook: redgrave_dbt.on-run-end.0 ...................................... [[32mOK[0m in 1.48s]
+[0m09:17:38  
+[0m09:17:38  Finished running 1 project hook, 3 table models, 3 view models in 0 hours 0 minutes and 7.48 seconds (7.48s).
+[0m09:17:38  
+[0m09:17:38  [32mCompleted successfully[0m
+[0m09:17:38  
+[0m09:17:38  Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=7
+COUNT(*) | SUM(LINE_REVENUE_GBP)
+480 | 22120.00
+CHANNEL | PAID_ORDERS | REVENUE_GBP
+matchday kiosk | 76 | 11476.00
+megastore | 76 | 6872.00
+online | 76 | 3088.00
+DAYS
+30
+
+================ 6. Tests ================
+[0m09:17:45  Running with dbt=1.11.16
+[0m09:17:45  Registered adapter: snowflake=1.11.6
+[0m09:17:45  Found 6 models, 18 data tests, 1 operation, 3 sources, 540 macros
+[0m09:17:45  
+[0m09:17:45  Concurrency: 4 threads (target='dev')
+[0m09:17:45  
+[0m09:17:46  3 of 18 START test assert_gold_matches_silver .................................. [RUN]
+[0m09:17:46  2 of 18 START test accepted_values_silver_orders_status__paid__refunded ........ [RUN]
+[0m09:17:46  1 of 18 START test accepted_values_silver_orders_channel__online__megastore__matchday_kiosk  [RUN]
+[0m09:17:46  4 of 18 START test not_null_gold_daily_sales_order_date ........................ [RUN]
+[0m09:17:46  2 of 18 PASS accepted_values_silver_orders_status__paid__refunded .............. [[32mPASS[0m in 0.22s]
+[0m09:17:46  5 of 18 START test not_null_gold_revenue_by_channel_channel .................... [RUN]
+[0m09:17:47  5 of 18 PASS not_null_gold_revenue_by_channel_channel .......................... [[32mPASS[0m in 0.25s]
+[0m09:17:47  6 of 18 START test not_null_gold_revenue_by_channel_revenue_gbp ................ [RUN]
+[0m09:17:47  4 of 18 PASS not_null_gold_daily_sales_order_date .............................. [[32mPASS[0m in 0.55s]
+[0m09:17:47  7 of 18 START test not_null_gold_top_products_sku .............................. [RUN]
+[0m09:17:47  7 of 18 PASS not_null_gold_top_products_sku .................................... [[32mPASS[0m in 0.20s]
+[0m09:17:47  8 of 18 START test not_null_silver_order_lines_order_id ........................ [RUN]
+[0m09:17:47  1 of 18 PASS accepted_values_silver_orders_channel__online__megastore__matchday_kiosk  [[32mPASS[0m in 0.85s]
+[0m09:17:47  9 of 18 START test not_null_silver_orders_order_id ............................. [RUN]
+[0m09:17:47  6 of 18 PASS not_null_gold_revenue_by_channel_revenue_gbp ...................... [[32mPASS[0m in 0.43s]
+[0m09:17:47  10 of 18 START test not_null_silver_products_product_id ........................ [RUN]
+[0m09:17:47  10 of 18 PASS not_null_silver_products_product_id .............................. [[32mPASS[0m in 0.39s]
+[0m09:17:47  11 of 18 START test not_null_silver_products_sku ............................... [RUN]
+[0m09:17:47  8 of 18 PASS not_null_silver_order_lines_order_id .............................. [[32mPASS[0m in 0.56s]
+[0m09:17:47  12 of 18 START test relationships_silver_order_lines_order_id__order_id__ref_silver_orders_  [RUN]
+[0m09:17:47  11 of 18 PASS not_null_silver_products_sku ..................................... [[32mPASS[0m in 0.13s]
+[0m09:17:47  13 of 18 START test unique_gold_daily_sales_order_date ......................... [RUN]
+[0m09:17:47  3 of 18 PASS assert_gold_matches_silver ........................................ [[32mPASS[0m in 1.43s]
+[0m09:17:47  14 of 18 START test unique_gold_revenue_by_channel_channel ..................... [RUN]
+[0m09:17:48  9 of 18 PASS not_null_silver_orders_order_id ................................... [[32mPASS[0m in 0.65s]
+[0m09:17:48  15 of 18 START test unique_gold_top_products_sku ............................... [RUN]
+[0m09:17:48  14 of 18 PASS unique_gold_revenue_by_channel_channel ........................... [[32mPASS[0m in 0.22s]
+[0m09:17:48  16 of 18 START test unique_silver_orders_order_id .............................. [RUN]
+[0m09:17:48  15 of 18 PASS unique_gold_top_products_sku ..................................... [[32mPASS[0m in 0.31s]
+[0m09:17:48  17 of 18 START test unique_silver_products_product_id .......................... [RUN]
+[0m09:17:48  13 of 18 PASS unique_gold_daily_sales_order_date ............................... [[32mPASS[0m in 0.43s]
+[0m09:17:48  18 of 18 START test unique_silver_products_sku ................................. [RUN]
+[0m09:17:48  16 of 18 PASS unique_silver_orders_order_id .................................... [[32mPASS[0m in 0.35s]
+[0m09:17:48  18 of 18 PASS unique_silver_products_sku ....................................... [[32mPASS[0m in 0.18s]
+[0m09:17:48  17 of 18 PASS unique_silver_products_product_id ................................ [[32mPASS[0m in 0.49s]
+[0m09:17:49  12 of 18 PASS relationships_silver_order_lines_order_id__order_id__ref_silver_orders_  [[32mPASS[0m in 2.13s]
+[0m09:17:49  
+[0m09:17:51  1 of 1 START hook: redgrave_dbt.on-run-end.0 ................................... [RUN]
+[0m09:17:51  1 of 1 OK hook: redgrave_dbt.on-run-end.0 ...................................... [[32mOK[0m in 1.25s]
+[0m09:17:52  
+[0m09:17:52  Finished running 1 project hook, 18 data tests in 0 hours 0 minutes and 6.41 seconds (6.41s).
+[0m09:17:52  
+[0m09:17:52  [32mCompleted successfully[0m
+[0m09:17:52  
+[0m09:17:52  Done. PASS=19 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=19
+
+================ 6. Build ================
+[0m09:17:53  Running with dbt=1.11.16
+[0m09:17:53  Registered adapter: snowflake=1.11.6
+[0m09:17:53  Found 6 models, 18 data tests, 1 operation, 3 sources, 540 macros
+[0m09:17:53  
+[0m09:17:53  Concurrency: 4 threads (target='dev')
+[0m09:17:53  
+[0m09:17:54  2 of 24 START sql view model SILVER.silver_products ............................ [RUN]
+[0m09:17:54  1 of 24 START sql view model SILVER.silver_orders .............................. [RUN]
+[0m09:17:55  2 of 24 OK created sql view model SILVER.silver_products ....................... [[32mSUCCESS 1[0m in 0.33s]
+[0m09:17:55  1 of 24 OK created sql view model SILVER.silver_orders ......................... [[32mSUCCESS 1[0m in 0.33s]
+[0m09:17:55  5 of 24 START test unique_silver_products_product_id ........................... [RUN]
+[0m09:17:55  4 of 24 START test not_null_silver_products_sku ................................ [RUN]
+[0m09:17:55  6 of 24 START test unique_silver_products_sku .................................. [RUN]
+[0m09:17:55  3 of 24 START test not_null_silver_products_product_id ......................... [RUN]
+[0m09:17:55  6 of 24 PASS unique_silver_products_sku ........................................ [[32mPASS[0m in 0.29s]
+[0m09:17:55  7 of 24 START test accepted_values_silver_orders_channel__online__megastore__matchday_kiosk  [RUN]
+[0m09:17:55  5 of 24 PASS unique_silver_products_product_id ................................. [[32mPASS[0m in 0.50s]
+[0m09:17:55  8 of 24 START test accepted_values_silver_orders_status__paid__refunded ........ [RUN]
+[0m09:17:55  7 of 24 PASS accepted_values_silver_orders_channel__online__megastore__matchday_kiosk  [[32mPASS[0m in 0.23s]
+[0m09:17:55  9 of 24 START test not_null_silver_orders_order_id ............................. [RUN]
+[0m09:17:55  4 of 24 PASS not_null_silver_products_sku ...................................... [[32mPASS[0m in 0.69s]
+[0m09:17:55  10 of 24 START test unique_silver_orders_order_id .............................. [RUN]
+[0m09:17:55  3 of 24 PASS not_null_silver_products_product_id ............................... [[32mPASS[0m in 0.73s]
+[0m09:17:55  9 of 24 PASS not_null_silver_orders_order_id ................................... [[32mPASS[0m in 0.28s]
+[0m09:17:55  8 of 24 PASS accepted_values_silver_orders_status__paid__refunded .............. [[32mPASS[0m in 0.32s]
+[0m09:17:55  10 of 24 PASS unique_silver_orders_order_id .................................... [[32mPASS[0m in 0.20s]
+[0m09:17:55  11 of 24 START sql view model SILVER.silver_order_lines ........................ [RUN]
+[0m09:17:56  11 of 24 OK created sql view model SILVER.silver_order_lines ................... [[32mSUCCESS 1[0m in 0.35s]
+[0m09:17:56  12 of 24 START test not_null_silver_order_lines_order_id ....................... [RUN]
+[0m09:17:56  13 of 24 START test relationships_silver_order_lines_order_id__order_id__ref_silver_orders_  [RUN]
+[0m09:17:56  12 of 24 PASS not_null_silver_order_lines_order_id ............................. [[32mPASS[0m in 0.35s]
+[0m09:17:56  13 of 24 PASS relationships_silver_order_lines_order_id__order_id__ref_silver_orders_  [[32mPASS[0m in 0.60s]
+[0m09:17:56  15 of 24 START sql table model GOLD.gold_revenue_by_channel .................... [RUN]
+[0m09:17:56  14 of 24 START sql table model GOLD.gold_daily_sales ........................... [RUN]
+[0m09:17:56  16 of 24 START sql table model GOLD.gold_top_products .......................... [RUN]
+[0m09:17:57  16 of 24 OK created sql table model GOLD.gold_top_products ..................... [[32mSUCCESS 12[0m in 1.07s]
+[0m09:17:57  14 of 24 OK created sql table model GOLD.gold_daily_sales ...................... [[32mSUCCESS 30[0m in 1.07s]
+[0m09:17:57  17 of 24 START test not_null_gold_top_products_sku ............................. [RUN]
+[0m09:17:57  18 of 24 START test unique_gold_top_products_sku ............................... [RUN]
+[0m09:17:57  19 of 24 START test not_null_gold_daily_sales_order_date ....................... [RUN]
+[0m09:17:58  17 of 24 PASS not_null_gold_top_products_sku ................................... [[32mPASS[0m in 0.23s]
+[0m09:17:58  20 of 24 START test unique_gold_daily_sales_order_date ......................... [RUN]
+[0m09:17:58  18 of 24 PASS unique_gold_top_products_sku ..................................... [[32mPASS[0m in 0.25s]
+[0m09:17:58  19 of 24 PASS not_null_gold_daily_sales_order_date ............................. [[32mPASS[0m in 0.28s]
+[0m09:17:58  15 of 24 OK created sql table model GOLD.gold_revenue_by_channel ............... [[32mSUCCESS 3[0m in 1.38s]
+[0m09:17:58  22 of 24 START test not_null_gold_revenue_by_channel_channel ................... [RUN]
+[0m09:17:58  21 of 24 START test assert_gold_matches_silver ................................. [RUN]
+[0m09:17:58  23 of 24 START test not_null_gold_revenue_by_channel_revenue_gbp ............... [RUN]
+[0m09:17:58  20 of 24 PASS unique_gold_daily_sales_order_date ............................... [[32mPASS[0m in 0.26s]
+[0m09:17:58  24 of 24 START test unique_gold_revenue_by_channel_channel ..................... [RUN]
+[0m09:17:58  22 of 24 PASS not_null_gold_revenue_by_channel_channel ......................... [[32mPASS[0m in 0.21s]
+[0m09:17:58  23 of 24 PASS not_null_gold_revenue_by_channel_revenue_gbp ..................... [[32mPASS[0m in 0.25s]
+[0m09:17:58  24 of 24 PASS unique_gold_revenue_by_channel_channel ........................... [[32mPASS[0m in 0.24s]
+[0m09:17:58  21 of 24 PASS assert_gold_matches_silver ....................................... [[32mPASS[0m in 0.70s]
+[0m09:17:58  
+[0m09:18:00  1 of 1 START hook: redgrave_dbt.on-run-end.0 ................................... [RUN]
+[0m09:18:00  1 of 1 OK hook: redgrave_dbt.on-run-end.0 ...................................... [[32mOK[0m in 1.24s]
+[0m09:18:01  
+[0m09:18:01  Finished running 1 project hook, 3 table models, 18 data tests, 3 view models in 0 hours 0 minutes and 7.12 seconds (7.12s).
+[0m09:18:01  
+[0m09:18:01  [32mCompleted successfully[0m
+[0m09:18:01  
+[0m09:18:01  Done. PASS=25 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=25
+
+================ 7. Freshness ================
+[0m09:18:02  Running with dbt=1.11.16
+[0m09:18:02  Registered adapter: snowflake=1.11.6
+[0m09:18:02  Found 6 models, 18 data tests, 1 operation, 3 sources, 540 macros
+[0m09:18:02  
+[0m09:18:02  Concurrency: 4 threads (target='dev')
+[0m09:18:02  
+[0m09:18:03  Pulling freshness from warehouse metadata tables for 0 sources
+[0m09:18:03  1 of 2 START freshness of bronze.order_items ................................... [RUN]
+[0m09:18:03  2 of 2 START freshness of bronze.orders ........................................ [RUN]
+[0m09:18:03  2 of 2 WARN freshness of bronze.orders ......................................... [[33mWARN[0m in 0.11s]
+[0m09:18:03  1 of 2 WARN freshness of bronze.order_items .................................... [[33mWARN[0m in 0.12s]
+[0m09:18:03  
+[0m09:18:05  1 of 1 START hook: redgrave_dbt.on-run-end.0 ................................... [RUN]
+[0m09:18:05  1 of 1 OK hook: redgrave_dbt.on-run-end.0 ...................................... [[32mOK[0m in 1.45s]
+[0m09:18:05  
+[0m09:18:05  Finished running 1 project hook, 2 sources in 0 hours 0 minutes and 2.79 seconds (2.79s).
+[0m09:18:05  Done.
+
+================ 8. Break it on purpose ================
+number of rows inserted
+1
+[0m09:18:10  Running with dbt=1.11.16
+[0m09:18:10  Registered adapter: snowflake=1.11.6
+[0m09:18:10  Found 6 models, 18 data tests, 1 operation, 3 sources, 540 macros
+[0m09:18:10  
+[0m09:18:10  Concurrency: 4 threads (target='dev')
+[0m09:18:10  
+[0m09:18:11  2 of 24 START sql view model SILVER.silver_products ............................ [RUN]
+[0m09:18:11  1 of 24 START sql view model SILVER.silver_orders .............................. [RUN]
+[0m09:18:12  2 of 24 OK created sql view model SILVER.silver_products ....................... [[32mSUCCESS 1[0m in 0.35s]
+[0m09:18:12  1 of 24 OK created sql view model SILVER.silver_orders ......................... [[32mSUCCESS 1[0m in 0.36s]
+[0m09:18:12  3 of 24 START test accepted_values_silver_orders_channel__online__megastore__matchday_kiosk  [RUN]
+[0m09:18:12  6 of 24 START test not_null_silver_products_product_id ......................... [RUN]
+[0m09:18:12  5 of 24 START test not_null_silver_orders_order_id ............................. [RUN]
+[0m09:18:12  4 of 24 START test accepted_values_silver_orders_status__paid__refunded ........ [RUN]
+[0m09:18:12  6 of 24 PASS not_null_silver_products_product_id ............................... [[32mPASS[0m in 0.25s]
+[0m09:18:12  7 of 24 START test not_null_silver_products_sku ................................ [RUN]
+[0m09:18:12  5 of 24 PASS not_null_silver_orders_order_id ................................... [[32mPASS[0m in 0.32s]
+[0m09:18:12  8 of 24 START test unique_silver_orders_order_id ............................... [RUN]
+[0m09:18:12  7 of 24 PASS not_null_silver_products_sku ...................................... [[32mPASS[0m in 0.36s]
+[0m09:18:12  9 of 24 START test unique_silver_products_product_id ........................... [RUN]
+[0m09:18:12  4 of 24 FAIL 1 accepted_values_silver_orders_status__paid__refunded ............ [[31mFAIL 1[0m in 0.71s]
+[0m09:18:12  10 of 24 START test unique_silver_products_sku ................................. [RUN]
+[0m09:18:12  8 of 24 PASS unique_silver_orders_order_id ..................................... [[32mPASS[0m in 0.48s]
+[0m09:18:12  9 of 24 PASS unique_silver_products_product_id ................................. [[32mPASS[0m in 0.20s]
+[0m09:18:12  3 of 24 PASS accepted_values_silver_orders_channel__online__megastore__matchday_kiosk  [[32mPASS[0m in 0.82s]
+[0m09:18:13  10 of 24 PASS unique_silver_products_sku ....................................... [[32mPASS[0m in 0.17s]
+[0m09:18:13  11 of 24 SKIP relation SILVER.silver_order_lines ............................... [[33mSKIP[0m]
+[0m09:18:13  12 of 24 SKIP test not_null_silver_order_lines_order_id ........................ [[33mSKIP[0m]
+[0m09:18:13  13 of 24 SKIP test relationships_silver_order_lines_order_id__order_id__ref_silver_orders_  [[33mSKIP[0m]
+[0m09:18:13  14 of 24 SKIP relation GOLD.gold_daily_sales ................................... [[33mSKIP[0m]
+[0m09:18:13  16 of 24 SKIP relation GOLD.gold_top_products .................................. [[33mSKIP[0m]
+[0m09:18:13  15 of 24 SKIP relation GOLD.gold_revenue_by_channel ............................ [[33mSKIP[0m]
+[0m09:18:13  18 of 24 SKIP test unique_gold_daily_sales_order_date .......................... [[33mSKIP[0m]
+[0m09:18:13  17 of 24 SKIP test not_null_gold_daily_sales_order_date ........................ [[33mSKIP[0m]
+[0m09:18:13  20 of 24 SKIP test unique_gold_top_products_sku ................................ [[33mSKIP[0m]
+[0m09:18:13  19 of 24 SKIP test not_null_gold_top_products_sku .............................. [[33mSKIP[0m]
+[0m09:18:13  21 of 24 SKIP test assert_gold_matches_silver .................................. [[33mSKIP[0m]
+[0m09:18:13  22 of 24 SKIP test not_null_gold_revenue_by_channel_channel .................... [[33mSKIP[0m]
+[0m09:18:13  23 of 24 SKIP test not_null_gold_revenue_by_channel_revenue_gbp ................ [[33mSKIP[0m]
+[0m09:18:13  24 of 24 SKIP test unique_gold_revenue_by_channel_channel ...................... [[33mSKIP[0m]
+[0m09:18:13  
+[0m09:18:14  1 of 1 START hook: redgrave_dbt.on-run-end.0 ................................... [RUN]
+[0m09:18:14  1 of 1 OK hook: redgrave_dbt.on-run-end.0 ...................................... [[32mOK[0m in 1.06s]
+[0m09:18:14  
+[0m09:18:14  Finished running 1 project hook, 3 table models, 18 data tests, 3 view models in 0 hours 0 minutes and 4.12 seconds (4.12s).
+[0m09:18:14  
+[0m09:18:14  [31mCompleted with 1 error, 0 partial successes, and 0 warnings:[0m
+[0m09:18:14  
+[0m09:18:14  [31mFailure in test accepted_values_silver_orders_status__paid__refunded (models/silver/schema.yml)[0m
+[0m09:18:14    Got 1 result, configured to fail if != 0
+[0m09:18:14  
+[0m09:18:14    compiled code at target/compiled/redgrave_dbt/models/silver/schema.yml/accepted_values_silver_orders_status__paid__refunded.sql
+[0m09:18:14  
+[0m09:18:14  Done. PASS=10 WARN=0 ERROR=1 SKIP=14 NO-OP=0 TOTAL=25
+number of rows deleted
+1
+[0m09:18:19  Running with dbt=1.11.16
+[0m09:18:19  Registered adapter: snowflake=1.11.6
+[0m09:18:19  Found 6 models, 18 data tests, 1 operation, 3 sources, 540 macros
+[0m09:18:19  
+[0m09:18:19  Concurrency: 4 threads (target='dev')
+[0m09:18:19  
+[0m09:18:20  1 of 24 START sql view model SILVER.silver_orders .............................. [RUN]
+[0m09:18:20  2 of 24 START sql view model SILVER.silver_products ............................ [RUN]
+[0m09:18:21  1 of 24 OK created sql view model SILVER.silver_orders ......................... [[32mSUCCESS 1[0m in 0.46s]
+[0m09:18:21  3 of 24 START test accepted_values_silver_orders_channel__online__megastore__matchday_kiosk  [RUN]
+[0m09:18:21  4 of 24 START test accepted_values_silver_orders_status__paid__refunded ........ [RUN]
+[0m09:18:21  5 of 24 START test not_null_silver_orders_order_id ............................. [RUN]
+[0m09:18:21  2 of 24 OK created sql view model SILVER.silver_products ....................... [[32mSUCCESS 1[0m in 0.49s]
+[0m09:18:21  6 of 24 START test unique_silver_orders_order_id ............................... [RUN]
+[0m09:18:21  5 of 24 PASS not_null_silver_orders_order_id ................................... [[32mPASS[0m in 0.32s]
+[0m09:18:21  7 of 24 START test not_null_silver_products_product_id ......................... [RUN]
+[0m09:18:21  6 of 24 PASS unique_silver_orders_order_id ..................................... [[32mPASS[0m in 0.29s]
+[0m09:18:21  8 of 24 START test not_null_silver_products_sku ................................ [RUN]
+[0m09:18:21  7 of 24 PASS not_null_silver_products_product_id ............................... [[32mPASS[0m in 0.21s]
+[0m09:18:21  9 of 24 START test unique_silver_products_product_id ........................... [RUN]
+[0m09:18:21  8 of 24 PASS not_null_silver_products_sku ...................................... [[32mPASS[0m in 0.23s]
+[0m09:18:21  10 of 24 START test unique_silver_products_sku ................................. [RUN]
+[0m09:18:21  4 of 24 PASS accepted_values_silver_orders_status__paid__refunded .............. [[32mPASS[0m in 0.61s]
+[0m09:18:21  9 of 24 PASS unique_silver_products_product_id ................................. [[32mPASS[0m in 0.19s]
+[0m09:18:21  3 of 24 PASS accepted_values_silver_orders_channel__online__megastore__matchday_kiosk  [[32mPASS[0m in 0.73s]
+[0m09:18:21  10 of 24 PASS unique_silver_products_sku ....................................... [[32mPASS[0m in 0.20s]
+[0m09:18:21  11 of 24 START sql view model SILVER.silver_order_lines ........................ [RUN]
+[0m09:18:22  11 of 24 OK created sql view model SILVER.silver_order_lines ................... [[32mSUCCESS 1[0m in 0.35s]
+[0m09:18:22  12 of 24 START test not_null_silver_order_lines_order_id ....................... [RUN]
+[0m09:18:22  13 of 24 START test relationships_silver_order_lines_order_id__order_id__ref_silver_orders_  [RUN]
+[0m09:18:22  12 of 24 PASS not_null_silver_order_lines_order_id ............................. [[32mPASS[0m in 0.40s]
+[0m09:18:22  13 of 24 PASS relationships_silver_order_lines_order_id__order_id__ref_silver_orders_  [[32mPASS[0m in 0.49s]
+[0m09:18:22  16 of 24 START sql table model GOLD.gold_top_products .......................... [RUN]
+[0m09:18:22  15 of 24 START sql table model GOLD.gold_revenue_by_channel .................... [RUN]
+[0m09:18:22  14 of 24 START sql table model GOLD.gold_daily_sales ........................... [RUN]
+[0m09:18:23  14 of 24 OK created sql table model GOLD.gold_daily_sales ...................... [[32mSUCCESS 30[0m in 0.88s]
+[0m09:18:23  17 of 24 START test not_null_gold_daily_sales_order_date ....................... [RUN]
+[0m09:18:23  18 of 24 START test unique_gold_daily_sales_order_date ......................... [RUN]
+[0m09:18:23  16 of 24 OK created sql table model GOLD.gold_top_products ..................... [[32mSUCCESS 12[0m in 1.03s]
+[0m09:18:23  19 of 24 START test not_null_gold_top_products_sku ............................. [RUN]
+[0m09:18:23  18 of 24 PASS unique_gold_daily_sales_order_date ............................... [[32mPASS[0m in 0.25s]
+[0m09:18:23  20 of 24 START test unique_gold_top_products_sku ............................... [RUN]
+[0m09:18:23  17 of 24 PASS not_null_gold_daily_sales_order_date ............................. [[32mPASS[0m in 0.26s]
+[0m09:18:24  19 of 24 PASS not_null_gold_top_products_sku ................................... [[32mPASS[0m in 0.22s]
+[0m09:18:24  20 of 24 PASS unique_gold_top_products_sku ..................................... [[32mPASS[0m in 0.22s]
+[0m09:18:24  15 of 24 OK created sql table model GOLD.gold_revenue_by_channel ............... [[32mSUCCESS 3[0m in 1.80s]
+[0m09:18:24  23 of 24 START test not_null_gold_revenue_by_channel_revenue_gbp ............... [RUN]
+[0m09:18:24  22 of 24 START test not_null_gold_revenue_by_channel_channel ................... [RUN]
+[0m09:18:24  24 of 24 START test unique_gold_revenue_by_channel_channel ..................... [RUN]
+[0m09:18:24  21 of 24 START test assert_gold_matches_silver ................................. [RUN]
+[0m09:18:24  22 of 24 PASS not_null_gold_revenue_by_channel_channel ......................... [[32mPASS[0m in 0.25s]
+[0m09:18:25  24 of 24 PASS unique_gold_revenue_by_channel_channel ........................... [[32mPASS[0m in 0.37s]
+[0m09:18:25  23 of 24 PASS not_null_gold_revenue_by_channel_revenue_gbp ..................... [[32mPASS[0m in 0.42s]
+[0m09:18:25  21 of 24 PASS assert_gold_matches_silver ....................................... [[32mPASS[0m in 0.47s]
+[0m09:18:25  
+[0m09:18:26  1 of 1 START hook: redgrave_dbt.on-run-end.0 ................................... [RUN]
+[0m09:18:26  1 of 1 OK hook: redgrave_dbt.on-run-end.0 ...................................... [[32mOK[0m in 1.11s]
+[0m09:18:27  
+[0m09:18:27  Finished running 1 project hook, 3 table models, 18 data tests, 3 view models in 0 hours 0 minutes and 7.15 seconds (7.15s).
+[0m09:18:27  
+[0m09:18:27  [32mCompleted successfully[0m
+[0m09:18:27  
+[0m09:18:27  Done. PASS=25 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=25
+
+================ 9. Docs ================
+[0m09:18:28  Running with dbt=1.11.16
+[0m09:18:28  Registered adapter: snowflake=1.11.6
+[0m09:18:28  Found 6 models, 18 data tests, 1 operation, 3 sources, 540 macros
+[0m09:18:28  
+[0m09:18:28  Concurrency: 4 threads (target='dev')
+[0m09:18:28  
+[0m09:18:30  Building catalog
+[0m09:18:36  Catalog written to /Users/jules/redgrave_lab/redgrave_dbt/target/catalog.json
+
+================ 11. Submit answers ================
+status
+Statement executed successfully.
+status
+Statement executed successfully.
+status
+LAB already exists, statement succeeded.
+status
+ANSWERS already exists, statement succeeded.
+number of rows deleted
+0
+number of rows inserted
+6
+QUESTION | ANSWER
+NAME | Jules Bordais
+Q1 | Silver models are views because a view stores nothing and is recomputed at each read: it is cheap to build and always reflects the latest bronze data, and silver is only an intermediate cleaning layer. Gold models are tables because they store the result: Power BI dashboards read them all day without recomputing the joins and aggregations, so reads are fast and cheap, and they are rebuilt at each dbt run. One line per folder in dbt_project.yml (+materialized: view / table) decides it.
+Q2 | source() reads a table that dbt does not build, declared in sources.yml (here the bronze tables products, orders, order_items loaded by the ingestion lab with COPY INTO). ref() reads another dbt model (e.g. ref('silver_orders')). ref() lets dbt build the dependency graph (DAG): it knows the build order (silver_orders before silver_order_lines before gold), resolves the right schema/database for the target, and draws the lineage. source() adds bronze as the starting nodes of that lineage and enables freshness checks.
+Q3 | The failed test was accepted_values_silver_orders_status__paid__refunded: the inserted order 999 had status 'PENDING', which became 'pending' in silver and is not in the accepted list (paid, refunded). The channel test did not fail because 'Online' was lower-cased and trimmed to 'online' in silver, an accepted value. dbt build runs and tests each model in DAG order; when a test on silver_orders fails, dbt marks every downstream node (silver_order_lines, the 3 gold models and their tests, the singular test) as SKIP so bad data never reaches gold. The gold tables kept yesterday's correct numbers for the dashboard.
+Q4 | dbt source freshness compared the max(_loaded_at) of bronze orders and order_items with the current time (products has freshness: null, so it is not checked). It answered WARN because my bronze load was older than 24 hours (but newer than 90 days, so not ERROR): the data is stale. It WARNs when the last load is older than warn_after = 24 hours, and ERRORs when it is older than error_after = 90 days. Reloading bronze recently makes it PASS.
+Q5 | If silver_orders is renamed, every model to its right in the lineage graph breaks: silver_order_lines (ref('silver_orders') in its join), then gold_revenue_by_channel, gold_daily_sales and gold_top_products (all built on silver_order_lines). The tests on them also break: the relationships test on silver_order_lines.order_id (to ref('silver_orders')), the gold tests and the singular test assert_gold_matches_silver. silver_products and the bronze sources are not affected.
+
+================ Instructor view ================
+COMMAND | STATUS | N
+build | fail | 1
+build | pass | 43
+build | skipped | 14
+build | success | 14
+freshness | warn | 2
+run | success | 6
+test | pass | 18
+
+DONE. Optional: dbt docs serve  (Ctrl+C to stop)
