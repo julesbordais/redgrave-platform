@@ -1,8 +1,11 @@
-target/
-dbt_packages/
-logs/
-.venv/
+submit_answers_dbt.sql
+step8_break.sql
+**/.venv/
+**/target/
+**/logs/
+**/dbt_packages/
 *.p8
 *.pem
-.user.yml
-run_all.sh
+**/run_all.sh
+**/run_log.txt
+.DS_Store
